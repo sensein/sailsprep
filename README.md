@@ -4,10 +4,6 @@
 [![codecov](https://codecov.io/gh/sensein/sailsprep/branch/main/graph/badge.svg?token=2V7LMSZ1DZ)](https://codecov.io/gh/sensein/sailsprep)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
-[![PyPI](https://img.shields.io/pypi/v/sailsprep.svg)](https://pypi.org/project/sailsprep/)
-[![Python Version](https://img.shields.io/pypi/pyversions/sailsprep)](https://pypi.org/project/sailsprep)
-[![License](https://img.shields.io/pypi/l/sailsprep)](https://opensource.org/licenses/Apache-2.0)
-
 [![pages](https://img.shields.io/badge/api-docs-blue)](https://sensein.github.io/sailsprep)
 
 Welcome to the ```sailsprep``` repo! This is a Python package for doing incredible video-based human pose estimation analyses. STAY TUNED!
