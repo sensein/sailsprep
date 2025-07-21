@@ -1,4 +1,4 @@
-"""This module defines CLI commands for the YOUR_PACKAGE_NAME application."""
+"""This module defines CLI commands for the sailsprep application."""
 
 import click
 

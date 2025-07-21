@@ -6,7 +6,7 @@ on:
     - main
   pull_request:
   schedule:
-    - cron: '0 6 1 * *'
+  - cron: 0 6 1 * *
 
 jobs:
   unit:
@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest] # For demonstration, other OSes are commented out: macos-latest, windows-latest
-        python-version: ["3.11", "3.10"]
+        python-version: ['3.11', '3.10']
     steps:
     - uses: actions/checkout@v4
       with:  # no need for the history
@@ -41,7 +41,7 @@ jobs:
           ${{ runner.os }}-poetry-
     - name: Install dependencies with Poetry
       run: |
-        poetry install --with dev 
+        poetry install --with dev
       shell: bash
     - name: Run unit tests
       id: run-tests
@@ -64,7 +64,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest] # For demonstration, other OSes are commented out: macos-latest, windows-latest
-        python-version: ["3.11", "3.10"]
+        python-version: ['3.11', '3.10']
     steps:
     - uses: actions/checkout@v4
       with:  # no need for the history
@@ -76,7 +76,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest] # For demonstration, other OSes are commented out: macos-latest, windows-latest
-        python-version: ["3.11", "3.10"]
+        python-version: ['3.11', '3.10']
     steps:
     - uses: actions/checkout@v4
       with:  # no need for the history
@@ -103,7 +103,7 @@ jobs:
           ${{ runner.os }}-poetry-
     - name: Install dependencies with Poetry
       run: |
-        poetry install --with dev 
+        poetry install --with dev
       shell: bash
     - name: Run mypy
       run: poetry run mypy .

@@ -1,20 +1,24 @@
 [project]
-name = "YOUR_PACKAGE_NAME"
+name = "sailsprep"
 dynamic = ["version", "dependencies"]
-description = "YOUR_PACKAGE_NAME is a Python package for doing incredible stuff."
+description = "sailsprep is a Python package for doing incredible video-based human pose estimation analyses."
 authors = [
-    {name = "YOUR_GITHUB_NICKNAME", email = "YOUR_EMAIL"},
+  {name = "yibeichan", email = "yibei@mit.edu"},
+  {name = "fabiocat", email = "fabiocat@mit.edu"},
+  {name = "satra", email = "satra@mit.edu"}
 ]
 maintainers = [
-    {name = "YOUR_GITHUB_NICKNAME", email = "YOUR_EMAIL"},
+  {name = "yibeichan", email = "yibei@mit.edu"},
+  {name = "fabiocat", email = "fabiocat@mit.edu"},
+  {name = "satra", email = "satra@mit.edu"}
 ]
 license = "Apache-2.0"
 readme = "README.md"
 requires-python = ">=3.10,<3.13"
-homepage = "YOUR_PACKAGE_REPO"
-repository = "YOUR_PACKAGE_REPO"
-documentation = "https://YOUR_GITHUB_NICKNAME.github.io/YOUR_PACKAGE_NAME"
-keywords = ["python", "package", "template"]
+homepage = "https://github.com/sensein/sailsprep"
+repository = "https://github.com/sensein/sailsprep"
+documentation = "https://sensein.github.io/sailsprep"
+keywords = ["human pose estimation"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Programming Language :: Python :: 3.10",
@@ -23,10 +27,10 @@ classifiers = [
 ]
 
 [project.scripts]
-YOUR_PACKAGE_NAME-cli = "YOUR_PACKAGE_NAME.cli:main"
+sailsprep-cli = "sailsprep.cli:main"
 
 [tool.poetry]
-packages = [{include = "YOUR_PACKAGE_NAME", from = "src"}]
+packages = [{include = "sailsprep", from = "src"}]
 requires-poetry = ">=2.0"
 version = "0.0.0"
 
@@ -35,8 +39,9 @@ click = "~=8.2"
 
 [tool.poetry.group.dev]
 optional = true
+
 [tool.poetry.group.dev.dependencies]
-pytest = "~=8.4"
+pytest-xdist = {version = "~=3.6.1", extras = ["psutil"]}
 mypy = "~=1.16"
 pre-commit = "~=4.2"
 pytest-cov = "~=6.1"
@@ -44,6 +49,7 @@ ruff = "~=0.11"
 
 [tool.poetry.group.docs]
 optional = true
+
 [tool.poetry.group.docs.dependencies]
 pdoc = "~=15.0"
 
