@@ -33,10 +33,14 @@ jobs:
         python-version: '3.10'
 
     - name: Download auto
+      env:
+        AUTO_VERSION: v11.1.2
       run: |
-        auto_download_url="$(curl -fsSL https://api.github.com/repos/intuit/auto/releases/tags/$AUTO_VERSION | jq -r '.assets[] | select(.name == "auto-linux.gz") | .browser_download_url')"
-        wget -O- "$auto_download_url" | gunzip > ~/auto
-        chmod a+x ~/auto
+        # Direct URL: /download/<tag>/<asset-name>
+        wget -qO- \
+          "https://github.com/intuit/auto/releases/download/${AUTO_VERSION}/auto-linux.gz" \
+          | gunzip > ~/auto
+        chmod +x ~/auto
 
     - name: Create release
       run: |
