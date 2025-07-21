@@ -6,7 +6,7 @@
 
 [![pages](https://img.shields.io/badge/api-docs-blue)](https://sensein.github.io/sailsprep)
 
-Welcome to the ```sailsprep``` repo! This is a Python package for doing incredible video-based human pose estimation analyses. STAY TUNED!
+Welcome to the ```sailsprep``` repo! This is a Python package for doing incredible video-based human pose estimation analyses. **STAY TUNED!**
 
 **Caution:**: this package is still under development and may change rapidly over the next few weeks.
 
@@ -36,6 +36,10 @@ from sailsprep.app import hello_world
 hello_world()
 ```
 
-## To do:
+## Contributing
+We welcome contributions from the community! Before getting started, please review our [**CONTRIBUTING.md**](https://github.com/sensein/sailsprep/blob/main/CONTRIBUTING.md).
+
+
+### To do:
 - [ ] A
 - [ ] lot
