@@ -1,0 +1,121 @@
+[project]
+name = "YOUR_PACKAGE_NAME"
+dynamic = ["version", "dependencies"]
+description = "YOUR_PACKAGE_NAME is a Python package for doing incredible stuff."
+authors = [
+    {name = "YOUR_GITHUB_NICKNAME", email = "YOUR_EMAIL"},
+]
+maintainers = [
+    {name = "YOUR_GITHUB_NICKNAME", email = "YOUR_EMAIL"},
+]
+license = "Apache-2.0"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+homepage = "YOUR_PACKAGE_REPO"
+repository = "YOUR_PACKAGE_REPO"
+documentation = "https://YOUR_GITHUB_NICKNAME.github.io/YOUR_PACKAGE_NAME"
+keywords = ["python", "package", "template"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: 3.10",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent"
+]
+
+[project.scripts]
+YOUR_PACKAGE_NAME-cli = "YOUR_PACKAGE_NAME.cli:main"
+
+[tool.poetry]
+packages = [{include = "YOUR_PACKAGE_NAME", from = "src"}]
+requires-poetry = ">=2.0"
+version = "0.0.0"
+
+[tool.poetry.dependencies]
+click = "~=8.2"
+
+[tool.poetry.group.dev]
+optional = true
+[tool.poetry.group.dev.dependencies]
+pytest = "~=8.4"
+mypy = "~=1.16"
+pre-commit = "~=4.2"
+pytest-cov = "~=6.1"
+ruff = "~=0.11"
+
+[tool.poetry.group.docs]
+optional = true
+[tool.poetry.group.docs.dependencies]
+pdoc = "~=15.0"
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "src"
+]
+testpaths = [
+  "src/tests"
+]
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.ruff]
+exclude = [
+  ".bzr",
+  ".direnv",
+  ".eggs",
+  ".git",
+  ".git-rewrite",
+  ".hg",
+  ".mypy_cache",
+  ".nox",
+  ".pants.d",
+  ".pytype",
+  ".ruff_cache",
+  ".svn",
+  ".tox",
+  ".venv",
+  "__pypackages__",
+  "_build",
+  "buck-out",
+  "build",
+  "dist",
+  "node_modules",
+  "venv"
+]
+line-length = 88
+indent-width = 4
+src = ["src"]
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["ANN", "D", "E", "F", "I"]
+ignore = [
+  "ANN101",  # self should not be annotated.
+  "ANN102"  # cls should not be annotated.
+]
+fixable = ["ALL"]
+unfixable = []
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"src/tests/**/*.py" = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+style = "pep440"
+bump = true
+pattern = "default-unprefixed"
+
+[build-system]
+requires = ["poetry-core>=2.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
+build-backend = "poetry_dynamic_versioning.backend"
