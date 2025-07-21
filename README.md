@@ -17,13 +17,7 @@ Welcome to the ```sailsprep``` repo! This is a Python package for doing incredib
 - These may include a wonderful CLI interface.
 
 ## Installation
-Install this package via :
-
-```sh
-pip install sailsprep
-```
-
-Or get the newest development version via:
+Get the newest development version via:
 
 ```sh
 pip install git+https://github.com/sensein/sailsprep.git
