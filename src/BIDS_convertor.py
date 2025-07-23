@@ -30,6 +30,36 @@ AUDIO_DIR = os.path.join(OUTPUT_DIR, 'extracted_audio')
 os.makedirs(PREPROCESSED_VIDEO_DIR, exist_ok=True)
 os.makedirs(AUDIO_DIR, exist_ok=True)
 
+def determine_session_and_task(video_path, age_months):
+    """Determine session and task labels based on video characteristics"""
+    # Determine session based on age groups
+    if age_months and 12 <= age_months <= 16:
+        session = "01"  # 12-16 months
+        task = "play"
+    elif age_months and 34 <= age_months <= 38:
+        session = "02"  # 34-38 months
+        task = "play"
+    else:
+        session = "01"  # default
+        task = "play"
+
+    return session, task
+
+def create_bids_filename(participant_id, session, task, datatype, extension):
+    """Create BIDS-compliant filename"""
+    # Remove 'sub-' prefix if present for consistent formatting
+    if participant_id.startswith('sub-'):
+        participant_id = participant_id[4:]
+
+    base_name = f"sub-{participant_id}_ses-{session}_task-{task}"
+
+    if datatype == "beh":
+        return f"{base_name}_beh{extension}"
+    elif datatype == "audio":
+        return f"{base_name}_recording-audio{extension}"
+    else:
+        return f"{base_name}_{datatype}{extension}"
+
 def read_demographics(asd_csv, nonasd_csv):
     df_asd = pd.read_csv(asd_csv)
     df_nonasd = pd.read_csv(nonasd_csv)
@@ -93,6 +123,7 @@ def extract_exif(video_path):
        return extracted
    except Exception as e:
        return {"error": str(e)}
+
 import re
 def extract_date_from_filename(filename):
    import re
@@ -191,7 +222,6 @@ def extract_audio(input_path, output_audio_path):
     ]
     subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-
 import struct
 import plistlib
 def parse_appledouble_metadata(metafile_path):
@@ -282,12 +312,18 @@ def process_videos(video_root, demographics_df):
                     video_date = datetime.strptime(video_date_str, "%Y:%m:%d %H:%M:%S")
                     age = calculate_age(demo_row.iloc[0]['dependent_dob'], video_date)
 
-                    preprocessed_name = f"{participant_id}_{uuid.uuid4().hex[:8]}.mp4"
-                    preprocessed_path = os.path.join(PREPROCESSED_VIDEO_DIR, preprocessed_name)
+                    # Determine session and task based on age and video characteristics
+                    session, task = determine_session_and_task(video_path, age)
+
+                    # Create BIDS-compliant filenames using the new function
+                    video_filename = create_bids_filename(participant_id, session, task, "beh", ".mp4")
+                    audio_filename = create_bids_filename(participant_id, session, task, "audio", ".wav")
+
+                    preprocessed_path = os.path.join(PREPROCESSED_VIDEO_DIR, video_filename)
                     if os.path.exists(preprocessed_path):
                         continue
                     preprocess_video(video_path, preprocessed_path)
-                    audio_path = os.path.join(AUDIO_DIR, preprocessed_name.replace('.mp4', '.wav'))
+                    audio_path = os.path.join(AUDIO_DIR, audio_filename)
                     extract_audio(preprocessed_path, audio_path)
 
                     # Look for associated AppleDouble metadata
@@ -297,6 +333,8 @@ def process_videos(video_root, demographics_df):
                         apple_metadata = parse_appledouble_metadata(apple_file)
                     entry = {
                         'participant_id': participant_id,
+                        'session': session,
+                        'task': task,
                         'original_video': video_path,
                         'preprocessed_video': preprocessed_path,
                         'audio_file': audio_path,
@@ -347,52 +385,48 @@ def preprocess_data(config, demographics_df):
             file_path = os.path.join(AUDIO_DIR, file)
             metadata_dict[file] = extract_exif(file_path)
 
-    organize_per_participant(PREPROCESSED_VIDEO_DIR, AUDIO_DIR, metadata_dict)
+    organize_per_participant(PREPROCESSED_VIDEO_DIR, AUDIO_DIR, metadata_dict, all_data)
     return all_data, not_processed
 
 # organizing per participant 
-def organize_per_participant(processed_video_dir, processed_audio_dir, metadata_dict):
-    for filename in os.listdir(processed_video_dir):
-        if filename.endswith('.mp4'):
-            participant_id = filename.split('.')[0]  # e.g., "sub-001"
-            video_src = os.path.join(processed_video_dir, filename)
-            audio_filename = filename.replace('.mp4', '.wav')
-            audio_src = os.path.join(processed_audio_dir, audio_filename)
+def organize_per_participant(processed_video_dir, processed_audio_dir, metadata_dict, all_data):
+    for entry in all_data:
+        participant_id = entry['participant_id']
+        session = entry['session']
+        task = entry['task']
+        
+        # Extract filenames from paths
+        video_filename = os.path.basename(entry['preprocessed_video'])
+        audio_filename = os.path.basename(entry['audio_file'])
+        
+        video_src = entry['preprocessed_video']
+        audio_src = entry['audio_file']
 
-            # Build BIDS-like paths
-            bids_dir = os.path.join(OUTPUT_DIR, participant_id, 'ses-01', 'beh')
-            os.makedirs(bids_dir, exist_ok=True)
+        # Build BIDS-like directory structure
+        bids_dir = os.path.join(OUTPUT_DIR, f"sub-{participant_id}", f"ses-{session}", "beh")
+        os.makedirs(bids_dir, exist_ok=True)
 
-            # Construct BIDS-compliant filenames
-            base_name = f"{participant_id}_ses-01_task-default"
-            video_dst = os.path.join(bids_dir, f"{base_name}_behvideo.mp4")
-            audio_dst = os.path.join(bids_dir, f"{base_name}_behaudio.wav")
-            video_json = os.path.join(bids_dir, f"{base_name}_behvideo.json")
-            audio_json = os.path.join(bids_dir, f"{base_name}_behaudio.json")
+        # Create BIDS-compliant filenames
+        video_dst_filename = create_bids_filename(participant_id, session, task, "beh", ".mp4")
+        audio_dst_filename = create_bids_filename(participant_id, session, task, "audio", ".wav")
+        
+        video_dst = os.path.join(bids_dir, video_dst_filename)
+        audio_dst = os.path.join(bids_dir, audio_dst_filename)
+        
+        # JSON metadata files
+        video_json = os.path.join(bids_dir, video_dst_filename.replace('.mp4', '.json'))
+        audio_json = os.path.join(bids_dir, audio_dst_filename.replace('.wav', '.json'))
 
-            # Move files
-            shutil.copy(video_src, video_dst)
-            if os.path.exists(audio_src):
-                shutil.copy(audio_src, audio_dst)
+        # Move files
+        shutil.copy(video_src, video_dst)
+        if os.path.exists(audio_src):
+            shutil.copy(audio_src, audio_dst)
 
-            # Save JSON metadata 
-            if filename in metadata_dict:
-                save_json_metadata(metadata_dict[filename], video_json)
-            if audio_filename in metadata_dict:
-                save_json_metadata(metadata_dict[audio_filename], audio_json)
-
-metadata_dict = {}
-for file in os.listdir(PREPROCESSED_VIDEO_DIR):
-    if file.endswith('.mp4'):
-        file_path = os.path.join(PREPROCESSED_VIDEO_DIR, file)
-        metadata_dict[file] = extract_exif(file_path)
-
-for file in os.listdir(AUDIO_DIR):
-    if file.endswith('.wav'):
-        file_path = os.path.join(AUDIO_DIR, file)
-        metadata_dict[file] = extract_exif(file_path)
-
-organize_per_participant(PREPROCESSED_VIDEO_DIR, AUDIO_DIR, metadata_dict)
+        # Save JSON metadata 
+        if video_filename in metadata_dict:
+            save_json_metadata(metadata_dict[video_filename], video_json)
+        if audio_filename in metadata_dict:
+            save_json_metadata(metadata_dict[audio_filename], audio_json)
 
 # dataset_description.json 
 def write_dataset_description(output_dir):
