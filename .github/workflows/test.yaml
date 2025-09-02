@@ -16,7 +16,7 @@ jobs:
         os: [ubuntu-latest] # For demonstration, other OSes are commented out: macos-latest, windows-latest
         python-version: ['3.11', '3.10']
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:  # no need for the history
         fetch-depth: 1
     - name: Set up Python ${{ matrix.python-version }}
@@ -66,7 +66,7 @@ jobs:
         os: [ubuntu-latest] # For demonstration, other OSes are commented out: macos-latest, windows-latest
         python-version: ['3.11', '3.10']
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:  # no need for the history
         fetch-depth: 1
     - uses: chartboost/ruff-action@v1
@@ -78,7 +78,7 @@ jobs:
         os: [ubuntu-latest] # For demonstration, other OSes are commented out: macos-latest, windows-latest
         python-version: ['3.11', '3.10']
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:  # no need for the history
         fetch-depth: 1
     - name: Set up Python ${{ matrix.python-version }}
