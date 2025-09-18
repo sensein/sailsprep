@@ -1,0 +1,27 @@
+# run in Python 3.10
+
+!pip install openmim
+!pip install git+https://github.com/jin-s13/xtcocoapi
+
+!pip install deepface
+!pip install facenet_pytorch
+!pip install filterpy
+
+!pip install scikit-learn
+
+!pip uninstall torch torchvision torchaudio -y
+!pip install torch==2.0.1+cu118 torchvision==0.15.2+cu118 -f https://download.pytorch.org/whl/torch_stable.html
+!pip install --trusted-host download.openmmlab.com -f https://download.openmmlab.com/mmcv/dist/cu118/torch2.0.0/index.html mmcv==2.0.1
+!mim install mmengine
+!mim install mmdet==3.2.0
+!git clone https://github.com/open-mmlab/mmpose.git
+%cd mmpose
+!pip install -e .
+!pip install "numpy<2.0"
+
+!pip install tf-keras
+
+# ensure ffmpeg is installed
+!pip install ffmpeg-python
+
+# for now, move this into mmpose dir and run the script there so that it can access mmpose modules
